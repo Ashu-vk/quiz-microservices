@@ -1,0 +1,76 @@
+plugins {
+    id 'java-library'
+    id 'org.springframework.boot' version '3.5.6'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'maven-publish'
+}
+
+group = 'com.quiz.common'
+version = '0.0.1'
+
+description = 'Demo project for Spring Boot'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    withSourcesJar() // Optional, adds sources jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+  set('springCloudVersion', "2025.0.0")
+}
+
+dependencies {
+  	api 'org.springframework.cloud:spring-cloud-starter-config'
+  	api 'org.springframework.boot:spring-boot-starter-webflux'
+    api 'org.springframework.boot:spring-boot-starter'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dependencyManagement {
+  imports {
+    mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+  }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+bootJar {
+	enabled = false
+}
+
+jar {
+	enabled = true
+	archiveBaseName.set("common")   // artifactId
+    archiveVersion.set("0.0.1")     // version
+    archiveClassifier.set("")    
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact(tasks.jar)
+            groupId = 'com.quiz.common'
+            artifactId = 'common'
+            version = '0.0.1'
+        }
+    }
+    repositories {
+        maven {
+        name = "localRepo"
+            url = uri("${buildDir}/repo")
+        }
+    }
+}

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.submission.model.SubmissionAnswer;
 import com.submission.repository.SubmissionAnswerRepo;
-import com.submission.service.SubmissionService;
+import com.submission.service.SubmissionAnswerService;
 import com.submission.view.SubmissionAnswerView;
 
 @Service
-public class SubmissionAnswerServiceImpl implements SubmissionService{
+public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
 	
 	@Autowired
 	private SubmissionAnswerRepo repository;

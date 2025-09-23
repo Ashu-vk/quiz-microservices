@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.submission.service.SubmissionService;
+import com.submission.service.SubmissionAnswerService;
 import com.submission.view.SubmissionAnswerView;
 
 @RestController
 public class RestSubmitAnswerController {
 
 	@Autowired
-	private SubmissionService submissionService;
+	private SubmissionAnswerService submissionService;
 
 	@RequestMapping(value = "/submitAnswer", method = RequestMethod.GET, produces = "application/json")
 	public List<SubmissionAnswerView> getAllSubAnswers(){

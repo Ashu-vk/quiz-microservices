@@ -3,18 +3,18 @@ package com.submission.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.submission.view.SubmissionAnswerView;
+import com.submission.view.SubmissionView;
 
 public interface SubmissionService {
 
-	Optional<SubmissionAnswerView> getById(Long sId);
+	List<SubmissionView> getSubmissions();
 
-	List<SubmissionAnswerView> getAll();
+	List<SubmissionView> getSubmissionsByQuiz(Long quizId);
 
-//	Optional<SubmissionAnswerView> saveOrUpdate(SubmissionAnswerView view);
+	List<SubmissionView> getSubmissionsByUser(Long userId);
 
-	List<SubmissionAnswerView> getAllByQuizAndUser(Long quizId, Long userId);
+	Optional<SubmissionView> getSubmissionById(Long id);
 
-	Optional<SubmissionAnswerView> saveOrUpdate(Long quizId, Long userId, SubmissionAnswerView view);
+	Optional<SubmissionView> saveOrUpdateSubmission(SubmissionView view);
 
 }

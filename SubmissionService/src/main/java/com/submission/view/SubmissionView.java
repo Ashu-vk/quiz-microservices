@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SubmissionView {
     private Long id;
-
     private Long quizId;     // from Quiz Service
     private Long userId;     // from User Service
     private LocalDateTime startTime;

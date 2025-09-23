@@ -31,6 +31,7 @@ public class RestQuizController {
 	@GetMapping("/quiz/{id}")
 	public QuizView getQuiz(@PathVariable(value = "id") Long id) {
 		QuizView quiz= quizService.getQuizById(id);
+		System.err.println(quiz.getTitle());
 		System.err.println(quiz.getId());
 		List<QuestionView> qList= webClient.get().uri("http://question-service/questions/{id}", id)
         .retrieve()
@@ -44,4 +45,6 @@ public class RestQuizController {
 	public List<QuizView> getQuiz() {
 		return quizService.getQuiz();
 	}
+	
+	
 }
