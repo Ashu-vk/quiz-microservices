@@ -8,10 +8,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.quiz.common.view.SubmissionAnswerView;
 import com.submission.model.SubmissionAnswer;
 import com.submission.repository.SubmissionAnswerRepo;
 import com.submission.service.SubmissionAnswerService;
-import com.submission.view.SubmissionAnswerView;
 
 @Service
 public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
@@ -30,10 +30,6 @@ public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
 	@Override
 	public List<SubmissionAnswerView> getAll(){
 		return toViewList(repository.findAll());
-	}
-	@Override
-	public List<SubmissionAnswerView> getAllByQuizAndUser(Long quizId, Long userId){
-		return toViewList(repository.findAllByQuizAndUser(quizId, userId));
 	}
 	
 	@Override

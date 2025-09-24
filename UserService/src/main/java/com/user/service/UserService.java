@@ -3,7 +3,7 @@ package com.user.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.user.view.UserView;
+import com.quiz.common.view.UserView;
 
 public interface UserService {
 

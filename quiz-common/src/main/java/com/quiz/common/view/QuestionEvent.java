@@ -1,4 +1,4 @@
-package com.question.view;
+package com.quiz.common.view;
 
 import java.time.LocalDateTime;
 
@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class QuestionEvent {
-	 private Long quizId;
-	    private Long questionId;
-	    private String content;
-	    private LocalDateTime timestamp;
+	 private QuizView quiz;
+	 private QuestionView question;
+	 private String content;
+	 private LocalDateTime timestamp;
 }

@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import com.question.model.Question;
 import com.question.repositories.QuestionRepository;
 import com.question.services.QuestionService;
-import com.question.view.QuestionEvent;
-import com.question.view.QuestionView;
+import com.quiz.common.view.QuestionEvent;
+import com.quiz.common.view.QuestionView;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -46,13 +46,13 @@ public class QuestionServiceImpl implements QuestionService {
 		if(questionView==null) {
 			throw new IllegalArgumentException("Question can not be empty");
 		}
-		if(questionView.getId()==null && (questionView.getQuizId()!=null && questionView.getQuizId().equals(quizId))) {
+		if(questionView.getId()==null && (questionView.getQuiz()!=null && questionView.getQuiz().getId().equals(quizId))) {
 			isNew = true;
 		}
-			questionView.setQuizId(quizId);
+			questionView.setQuiz(questionView.getQuiz());
 		questionView = saveOrUpdateQuestion(questionView);
-		QuestionEvent qEvent = QuestionEvent.builder().questionId(questionView.getId())
-				.quizId(quizId)
+		QuestionEvent qEvent = QuestionEvent.builder().question(questionView)
+				.quiz(questionView.getQuiz())
 				.content(isNew?"Added new question": "Updated question with id "+ questionView.getId())
 				.timestamp(LocalDateTime.now()).build();
 		kafkaTemplate.send("quiz-question-events", quizId.toString(), qEvent);
@@ -90,7 +90,7 @@ public class QuestionServiceImpl implements QuestionService {
 		qView.setId(question.getId());
 		qView.setCategory(question.getCategory());
 		qView.setCreatedAt(question.getCreatedAt());
-		qView.setQuizId(question.getQuizId());
+//		qView.setQuiz(question.getQuizId());
 		qView.setDifficulty(question.getDifficulty());
 		qView.setOptions(question.getOptions());
 		qView.setText(question.getText());
@@ -98,6 +98,7 @@ public class QuestionServiceImpl implements QuestionService {
 		qView.setIsActive(question.getIsActive());
 		qView.setType(question.getType());
 		qView.setUpdatedAt(question.getUpdatedAt());
+		qView.setPoints(question.getPoints());
 		return Optional.of(qView) ;
 	}
 	
@@ -111,7 +112,7 @@ public class QuestionServiceImpl implements QuestionService {
 		ques.setIsActive(view.getIsActive());
 		ques.setOptions(view.getOptions());
 		ques.setPoints(view.getPoints());
-		ques.setQuizId(view.getQuizId());
+		ques.setQuizId(view.getQuiz().getId());
 		ques.setText(view.getText());
 		ques.setTimeLimitInSeconds(view.getTimeLimitInSeconds());
 		ques.setType(view.getType());

@@ -3,7 +3,8 @@ package com.question.services;
 import java.util.List;
 import java.util.Optional;
 
-import com.question.view.QuestionView;
+import com.quiz.common.view.QuestionView;
+
 
 public interface QuestionService {
 

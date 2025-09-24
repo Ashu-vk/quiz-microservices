@@ -1,18 +1,22 @@
 package com.quiz.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
+import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import com.quiz.common.view.QuizView;
+import com.quiz.common.view.SubmissionView;
 import com.quiz.model.Quiz;
 import com.quiz.repositories.QuizRepository;
 import com.quiz.service.QuizService;
 import com.quiz.utils.DomainConverter;
-import com.quiz.view.QuestionEvent;
-import com.quiz.view.QuizView;
 
 import jakarta.transaction.Transactional;
 
@@ -32,17 +36,37 @@ public class QuizServiceImpl implements QuizService, DomainConverter<Quiz, QuizV
 	
 	@Override
 	public QuizView saveQuiz(QuizView view ) {
-		Optional<Quiz> quiz = Optional.ofNullable(toDomain(view));
-		 if(quiz.isPresent()) {
-			 return toView(repository.save(quiz.get()));
+		Optional<Quiz> quizOpt = Optional.ofNullable(toDomain(view));
+		 if(quizOpt.isPresent()) {
+			 Quiz quiz = quizOpt.get();
+			 if(quiz.getId() ==null||quiz.getId() == 0) {
+				 quiz.setCreatedAt(LocalDateTime.now());
+			 } else {
+				 quiz.setUpdatedAt(LocalDateTime.now());
+			 }
+			 return toView(repository.save(quiz));
 		 }
 		 throw new IllegalArgumentException("Quiz view can not not be empty");
 		 
 	}
+	
+	@Override
+	public QuizView startQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture) {
+		try {
+			SubmissionView submission = submissionFuture.get();
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+		view.setStartDateTime(LocalDateTime.now());
+		view.setEndDateTime(view.getStartDateTime().plusMinutes(view.getDurationInMinutes()));
+		view.setUpdatedAt(LocalDateTime.now());
+		return saveQuiz(view);
+	}
+	
 	@Override
 	public QuizView getQuizById(Long id ) {
 		if(id != null) {
-			return toView(repository.findById(id).orElseThrow( () ->new RuntimeException("Quiz not found by id" + id)));
+			return toView(repository.findById(id).orElseThrow( () ->new ResourceNotFoundException("Quiz not found by id" + id)));
 		}
 		return null;
 	}
@@ -59,7 +83,7 @@ public class QuizServiceImpl implements QuizService, DomainConverter<Quiz, QuizV
 		    view.setDescription(quiz.getDescription());
 		    view.setCategory(quiz.getCategory());
 		    view.setDifficulty(quiz.getDifficulty());
-		    view.setIsPublished(quiz.getIsPublished());
+		    view.setIspublished(quiz.getIsPublished());
 		    view.setIsTimed(quiz.getIsTimed());
 		    view.setDurationInMinutes(quiz.getDurationInMinutes());
 		    view.setTotalPoints(quiz.getTotalPoints());
@@ -78,7 +102,7 @@ public class QuizServiceImpl implements QuizService, DomainConverter<Quiz, QuizV
 		    quiz.setDescription(view.getDescription());
 		    quiz.setCategory(view.getCategory());
 		    quiz.setDifficulty(view.getDifficulty());
-		    quiz.setIsPublished(view.getIsPublished());
+		    quiz.setIsPublished(view.getIspublished());
 		    quiz.setIsTimed(view.getIsTimed());
 		    quiz.setDurationInMinutes(view.getDurationInMinutes());
 		    quiz.setTotalPoints(view.getTotalPoints());

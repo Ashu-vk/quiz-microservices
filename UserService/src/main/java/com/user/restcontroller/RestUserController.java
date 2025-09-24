@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.user.service.UserService;
-import com.user.view.UserView;
+import com.quiz.common.view.UserView;
 
 @RestController
 public class RestUserController {

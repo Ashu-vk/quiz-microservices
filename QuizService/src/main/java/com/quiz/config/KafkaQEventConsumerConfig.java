@@ -15,7 +15,8 @@ import org.springframework.kafka.listener.DefaultErrorHandler;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.util.backoff.FixedBackOff;
 
-import com.quiz.view.QuestionEvent;
+import com.quiz.common.view.QuestionEvent;
+
 
 @Configuration
 @ConditionalOnProperty(name = "app.kafka.enabled", havingValue = "true", matchIfMissing = false)

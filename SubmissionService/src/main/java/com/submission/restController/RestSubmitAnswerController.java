@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.quiz.common.view.SubmissionAnswerView;
 import com.submission.service.SubmissionAnswerService;
-import com.submission.view.SubmissionAnswerView;
 
 @RestController
 public class RestSubmitAnswerController {
@@ -23,11 +23,11 @@ public class RestSubmitAnswerController {
 		return submissionService.getAll();
 	}
 	
-	@RequestMapping(value = "/submitAnswer/{quizId}/users/{userId}", method = RequestMethod.GET, produces = "application/json")
-	public List<SubmissionAnswerView> getAllSubAnswersOfQuizByUser(@PathVariable(value = "quizId") Long quizId,
-														@PathVariable(value = "userId") Long userId){
-		return submissionService.getAllByQuizAndUser(quizId, userId);
-	}
+//	@RequestMapping(value = "/submitAnswer/{quizId}/users/{userId}", method = RequestMethod.GET, produces = "application/json")
+//	public List<SubmissionAnswerView> getAllSubAnswersOfQuizByUser(@PathVariable(value = "quizId") Long quizId,
+//														@PathVariable(value = "userId") Long userId){
+//		return submissionService.getAllByQuizAndUser(quizId, userId);
+//	}
 	
 	@RequestMapping(value = "/submitAnswer{quizId}/users/{userId}", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public SubmissionAnswerView saveUsers(@PathVariable(value = "quizId") Long quizId,

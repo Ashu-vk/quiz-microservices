@@ -1,4 +1,4 @@
-package com.result.view;
+package com.quiz.common.view;
 
 import java.util.Date;
 
@@ -13,12 +13,10 @@ public class ResultView {
 
 	    private Long id;
 
-	    private Long userId;   // user who attempted the quiz
-	    private Long quizId;   // which quiz this result belongs to
-
+	    private UserView user;   // user who attempted the quiz
+	    private QuizView quiz;   // which quiz this result belongs to
 	    private Integer score; // final score
 	    private Integer totalQuestions;
 	    private Integer correctAnswers;
-
 	    private Date attemptedAt = new Date();
 }

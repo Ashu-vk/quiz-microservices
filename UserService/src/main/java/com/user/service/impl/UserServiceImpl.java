@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.user.model.User;
 import com.user.repository.UserRepo;
 import com.user.service.UserService;
-import com.user.view.UserView;
+import com.quiz.common.view.UserView;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService {
 
 	        return User.builder()
 	                .id(view.getId())
-	                .username(view.getUsername())
+	                .username(view.getName())
 	                .email(view.getEmail())
 	                .role(view.getRole())
 	                .createdAt(view.getCreatedAt())
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 		return Optional.ofNullable(user).map(u->
 			 UserView.builder()
 		     .id(u.getId())
-		     .username(u.getUsername())
+		     .name(u.getUsername())
 		     .email(u.getEmail())
 		     .role(u.getRole())
 		     .createdAt(u.getCreatedAt())

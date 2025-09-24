@@ -1,18 +1,24 @@
 package com.submission.service.impl;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import com.quiz.common.view.QuestionView;
+import com.quiz.common.view.QuizView;
+import com.quiz.common.view.SubmissionView;
+import com.quiz.common.view.UserView;
 import com.submission.model.Submission;
 import com.submission.repository.SubmissionRepo;
 import com.submission.service.SubmissionService;
-import com.submission.view.SubmissionView;
 
+@Service
 public class SubmissionServiceImpl implements SubmissionService {
 
 	@Autowired
@@ -54,8 +60,8 @@ public class SubmissionServiceImpl implements SubmissionService {
         }
         return Submission.builder()
                 .id(view.getId())
-                .quizId(view.getQuizId())
-                .userId(view.getUserId())
+                .quizId(view.getQuiz().getId())
+                .userId(view.getUser().getId())
                 .startTime(view.getStartTime())
                 .endTime(view.getEndTime())
                 .score(view.getScore())
@@ -69,8 +75,8 @@ public class SubmissionServiceImpl implements SubmissionService {
         return Optional.ofNullable(entity)
                 .map(answer -> SubmissionView.builder()
                 		.id(answer.getId())
-                        .quizId(answer.getQuizId())
-                        .userId(answer.getUserId())
+//                        .quizId(answer.getQuizId())
+//                        .userId(answer.getUserId())
                         .startTime(answer.getStartTime())
                         .endTime(answer.getEndTime())
                         .score(answer.getScore())
@@ -79,4 +85,15 @@ public class SubmissionServiceImpl implements SubmissionService {
                         .build()
                 );
     }
+	@Override
+	public SubmissionView startQuiz(QuizView quiz, UserView userView) {
+		SubmissionView view =SubmissionView.builder()
+		.quiz(quiz)
+		.startTime(LocalDateTime.now())
+		.status("STARTED")
+		.totalPoints(quiz.getQuestions().stream().peek(q->System.out.println(q.getId() +": p"+q.getPoints())).map(QuestionView::getPoints).reduce(0, Integer::sum))
+		.user(userView)
+		.build();
+		return saveOrUpdateSubmission(view).get();
+	}
 }

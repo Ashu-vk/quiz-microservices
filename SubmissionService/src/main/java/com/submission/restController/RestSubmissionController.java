@@ -8,17 +8,23 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.quiz.common.view.QuizView;
+import com.quiz.common.view.SubmissionView;
+import com.quiz.common.view.UserView;
 import com.submission.service.SubmissionService;
-import com.submission.view.SubmissionView;
+import com.submission.service.UserServiceClient;
 
 @RestController
 public class RestSubmissionController {
 
 	@Autowired
 	private SubmissionService service;
+	@Autowired
+	private UserServiceClient userService;
 	
 	@RequestMapping(value = "/submission/{id}", method = RequestMethod.GET)
 	public SubmissionView get(@PathVariable(value="id") Long id) {
@@ -32,6 +38,14 @@ public class RestSubmissionController {
 	public List<SubmissionView> getQuizSubmissions(@PathVariable(value = "quizId") Long quizId) {
 		return service.getSubmissionsByQuiz(quizId);
 	}
+	
+	@RequestMapping(value = "/submission/start/quiz", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public SubmissionView getStartSubmissions(@RequestBody QuizView quiz, @RequestParam(value = "userId") Long userId) {
+		UserView userView= userService.getUserById(userId);
+		System.err.println(quiz.getQuestions().size()+"Questions");
+		return service.startQuiz(quiz, userView);
+	}
+	
 	@RequestMapping(value = "/submission/user/{userId}", method = RequestMethod.GET)
 	public List<SubmissionView> getUsersSubmissions(@PathVariable(value = "userId") Long userId) {
 		return service.getSubmissionsByUser(userId);

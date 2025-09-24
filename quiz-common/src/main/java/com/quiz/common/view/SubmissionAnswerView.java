@@ -1,18 +1,16 @@
-package com.submission.view;
-
+package com.quiz.common.view;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class SubmissionAnswerView {
     private Long id;
-    private Long quizId;
-    private Long submissionId;
-    private Long questionId;
+    private QuizView quiz;
+    private SubmissionView submission;
+    private QuestionView question;
     private String givenAnswer;
     private Boolean correct;
     private Integer pointsAwarded;

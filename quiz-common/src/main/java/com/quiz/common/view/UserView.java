@@ -1,17 +1,16 @@
-package com.user.view;
+package com.quiz.common.view;
 
 import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class UserView {
     private Long id;
-    private String username;
+    private String name;
     private String email;
     private String role;
     private LocalDateTime createdAt;

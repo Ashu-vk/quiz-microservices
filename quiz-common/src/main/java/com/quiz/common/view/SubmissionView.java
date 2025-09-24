@@ -1,4 +1,4 @@
-package com.submission.view;
+package com.quiz.common.view;
 
 import java.time.LocalDateTime;
 
@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SubmissionView {
     private Long id;
-    private Long quizId;     // from Quiz Service
-    private Long userId;     // from User Service
+    private QuizView quiz;     // from Quiz Service
+    private UserView user;     // from User Service
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Integer score;

@@ -3,7 +3,10 @@ package com.submission.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.submission.view.SubmissionView;
+import com.quiz.common.view.QuizView;
+import com.quiz.common.view.SubmissionView;
+import com.quiz.common.view.UserView;
+
 
 public interface SubmissionService {
 
@@ -16,5 +19,7 @@ public interface SubmissionService {
 	Optional<SubmissionView> getSubmissionById(Long id);
 
 	Optional<SubmissionView> saveOrUpdateSubmission(SubmissionView view);
+
+	SubmissionView startQuiz(QuizView quiz, UserView userView);
 
 }
