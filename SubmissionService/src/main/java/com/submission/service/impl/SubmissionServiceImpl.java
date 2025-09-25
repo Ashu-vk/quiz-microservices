@@ -13,7 +13,8 @@ import org.springframework.stereotype.Service;
 import com.quiz.common.view.QuestionView;
 import com.quiz.common.view.QuizView;
 import com.quiz.common.view.SubmissionView;
-import com.quiz.common.view.UserView;
+import com.submission.fign.services.QuizFeignService;
+import com.submission.fign.services.UserFeignClient;
 import com.submission.model.Submission;
 import com.submission.repository.SubmissionRepo;
 import com.submission.service.SubmissionService;
@@ -23,6 +24,11 @@ public class SubmissionServiceImpl implements SubmissionService {
 
 	@Autowired
 	private SubmissionRepo repository;
+	
+	@Autowired
+	private UserFeignClient userService;
+	@Autowired
+	private QuizFeignService quizFiegnService;
 	
 	@Override
 	public List<SubmissionView> getSubmissions() {
@@ -37,8 +43,12 @@ public class SubmissionServiceImpl implements SubmissionService {
 		return toViewList(repository.findByUserId(userId));	
 	}
 	@Override
-	public Optional<SubmissionView> getSubmissionById(Long id) {
-		return toView(repository.findById(id).get());
+	public SubmissionView getSubmissionById(Long id) throws Exception {
+		Submission sub = repository.findById(id).get();
+		SubmissionView view =toView(sub).orElseThrow(()-> new Exception("No submission found for id"+ id));
+		view.setUser(userService.getUserById(sub.getUserId()));
+		view.setQuiz(quizFiegnService.getQuizById(sub.getQuizId()));;
+		return view;
 	}
 	@Override
 	public Optional<SubmissionView> saveOrUpdateSubmission(SubmissionView view) {
@@ -86,13 +96,13 @@ public class SubmissionServiceImpl implements SubmissionService {
                 );
     }
 	@Override
-	public SubmissionView startQuiz(QuizView quiz, UserView userView) {
+	public SubmissionView startQuiz(QuizView quiz, Long userId) {
 		SubmissionView view =SubmissionView.builder()
 		.quiz(quiz)
 		.startTime(LocalDateTime.now())
 		.status("STARTED")
-		.totalPoints(quiz.getQuestions().stream().peek(q->System.out.println(q.getId() +": p"+q.getPoints())).map(QuestionView::getPoints).reduce(0, Integer::sum))
-		.user(userView)
+		.totalPoints(quiz.getQuestions().stream().map(QuestionView::getPoints).reduce(0, Integer::sum))
+		.user(userService.getUserById(userId))
 		.build();
 		return saveOrUpdateSubmission(view).get();
 	}

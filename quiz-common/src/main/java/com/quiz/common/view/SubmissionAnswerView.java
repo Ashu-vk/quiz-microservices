@@ -8,7 +8,6 @@ import lombok.*;
 @Builder
 public class SubmissionAnswerView {
     private Long id;
-    private QuizView quiz;
     private SubmissionView submission;
     private QuestionView question;
     private String givenAnswer;

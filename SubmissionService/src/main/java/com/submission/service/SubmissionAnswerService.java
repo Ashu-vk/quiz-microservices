@@ -15,6 +15,6 @@ public interface SubmissionAnswerService {
 //	Optional<SubmissionAnswerView> saveOrUpdate(SubmissionAnswerView view);
 
 
-	Optional<SubmissionAnswerView> saveOrUpdate(Long quizId, Long userId, SubmissionAnswerView view);
+	Optional<SubmissionAnswerView> saveOrUpdate(Long submisssionId, SubmissionAnswerView view);
 
 }

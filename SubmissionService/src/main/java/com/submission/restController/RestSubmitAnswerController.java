@@ -29,11 +29,10 @@ public class RestSubmitAnswerController {
 //		return submissionService.getAllByQuizAndUser(quizId, userId);
 //	}
 	
-	@RequestMapping(value = "/submitAnswer{quizId}/users/{userId}", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public SubmissionAnswerView saveUsers(@PathVariable(value = "quizId") Long quizId,
-										  @PathVariable(value = "userId") Long userId,
+	@RequestMapping(value = "submission/{sid}/submitAnswer", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public SubmissionAnswerView saveUsers(@PathVariable(value = "sid") Long submisssionId,
 										  @RequestBody SubmissionAnswerView submissionAnswerView){
-		return submissionService.saveOrUpdate(quizId, userId,submissionAnswerView).orElseThrow();
+		return submissionService.saveOrUpdate(submisssionId, submissionAnswerView).orElseThrow();
 	}
 	
 	@RequestMapping(value = "/submitAnswer/{sId}", method = RequestMethod.GET, produces = "application/json")

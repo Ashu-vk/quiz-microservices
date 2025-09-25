@@ -15,20 +15,24 @@ import org.springframework.web.server.ResponseStatusException;
 import com.quiz.common.view.QuizView;
 import com.quiz.common.view.SubmissionView;
 import com.quiz.common.view.UserView;
+import com.submission.fign.services.UserFeignClient;
 import com.submission.service.SubmissionService;
-import com.submission.service.UserServiceClient;
 
 @RestController
 public class RestSubmissionController {
 
 	@Autowired
 	private SubmissionService service;
-	@Autowired
-	private UserServiceClient userService;
+	
 	
 	@RequestMapping(value = "/submission/{id}", method = RequestMethod.GET)
-	public SubmissionView get(@PathVariable(value="id") Long id) {
-		return service.getSubmissionById(id).orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND, "No submission found for id"+ id));
+	public SubmissionView getSubById(@PathVariable(value="id") Long id) {
+		try {
+			return service.getSubmissionById(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	@RequestMapping(value = "/submission", method = RequestMethod.GET)
 	public List<SubmissionView> getAll() {
@@ -41,9 +45,7 @@ public class RestSubmissionController {
 	
 	@RequestMapping(value = "/submission/start/quiz", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
 	public SubmissionView getStartSubmissions(@RequestBody QuizView quiz, @RequestParam(value = "userId") Long userId) {
-		UserView userView= userService.getUserById(userId);
-		System.err.println(quiz.getQuestions().size()+"Questions");
-		return service.startQuiz(quiz, userView);
+		return service.startQuiz(quiz, userId);
 	}
 	
 	@RequestMapping(value = "/submission/user/{userId}", method = RequestMethod.GET)

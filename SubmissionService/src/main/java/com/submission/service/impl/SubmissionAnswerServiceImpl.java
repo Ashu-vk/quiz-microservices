@@ -33,13 +33,13 @@ public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
 	}
 	
 	@Override
-	public Optional<SubmissionAnswerView> saveOrUpdate(Long quizId, Long userId, SubmissionAnswerView view) {
+	public Optional<SubmissionAnswerView> saveOrUpdate(Long submissionId, SubmissionAnswerView view) {
 		if(view == null) {
 			throw new IllegalArgumentException("User cannot be null");
 		}
-		view.setSubmissionId(userId);
-		view.setQuizId(quizId);
+//		view.setSubmission(submissionId);
 		SubmissionAnswer subAnswer = toEntity(view);
+		subAnswer.setSubmissionId(submissionId);
 		return toView(repository.save(subAnswer));
 	}
 	
@@ -52,8 +52,8 @@ public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
         return Optional.ofNullable(entity)
                 .map(answer -> SubmissionAnswerView.builder()
                         .id(answer.getId())
-                        .submissionId(answer.getSubmissionId())
-                        .questionId(answer.getQuestionId())
+//                        .submissionId(answer.getSubmissionId())
+//                        .question(answer.getQuestionId())
                         .givenAnswer(answer.getGivenAnswer())
                         .correct(answer.getCorrect())
                         .pointsAwarded(answer.getPointsAwarded())
@@ -67,8 +67,8 @@ public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
         }
         return SubmissionAnswer.builder()
                 .id(view.getId())
-                .submissionId(view.getSubmissionId())
-                .questionId(view.getQuestionId())
+                .submissionId(view.getSubmission().getId())
+                .questionId(view.getQuestion().getId())
                 .givenAnswer(view.getGivenAnswer())
                 .correct(view.getCorrect())
                 .pointsAwarded(view.getPointsAwarded())

@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import com.quiz.common.view.QuizView;
 import com.quiz.common.view.SubmissionView;
-import com.quiz.common.view.UserView;
 
 
 public interface SubmissionService {
@@ -16,10 +15,10 @@ public interface SubmissionService {
 
 	List<SubmissionView> getSubmissionsByUser(Long userId);
 
-	Optional<SubmissionView> getSubmissionById(Long id);
+	SubmissionView getSubmissionById(Long id) throws Exception;
 
 	Optional<SubmissionView> saveOrUpdateSubmission(SubmissionView view);
 
-	SubmissionView startQuiz(QuizView quiz, UserView userView);
+	SubmissionView startQuiz(QuizView quiz, Long userId);
 
 }
