@@ -21,4 +21,6 @@ public interface SubmissionService {
 
 	SubmissionView startQuiz(QuizView quiz, Long userId);
 
+	SubmissionView submitQuiz(QuizView quiz, Long userId) throws Exception;
+
 }

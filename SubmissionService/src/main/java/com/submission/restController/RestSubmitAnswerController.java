@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.quiz.common.view.SubmissionAnswerView;
@@ -30,9 +31,9 @@ public class RestSubmitAnswerController {
 //	}
 	
 	@RequestMapping(value = "submission/{sid}/submitAnswer", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public SubmissionAnswerView saveUsers(@PathVariable(value = "sid") Long submisssionId,
-										  @RequestBody SubmissionAnswerView submissionAnswerView){
-		return submissionService.saveOrUpdate(submisssionId, submissionAnswerView).orElseThrow();
+	public SubmissionAnswerView submitAnswer(@PathVariable(value = "sid") Long submisssionId,
+										  @RequestBody SubmissionAnswerView submissionAnswerView) throws Exception{
+		return submissionService.saveOrUpdateBySubmission(submisssionId, submissionAnswerView).orElseThrow();
 	}
 	
 	@RequestMapping(value = "/submitAnswer/{sId}", method = RequestMethod.GET, produces = "application/json")

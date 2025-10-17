@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.question.services.QuestionService;
 import com.quiz.common.view.QuestionView;
+import com.quiz.common.view.SubmissionView;
 
 @RestController
 public class RestQuestionController {
@@ -52,6 +54,12 @@ public class RestQuestionController {
 											@RequestBody QuestionView questionView) {
 		return questionService.saveOrUpdateQuestionForQuiz(quizId, questionView);
 		
+	}
+	
+	@PostMapping("/questions/submission")
+	public SubmissionView verifyAnwers(@RequestBody SubmissionView submission) throws Exception {
+		
+		return questionService.verifySubmission(submission);
 	}
 
 }

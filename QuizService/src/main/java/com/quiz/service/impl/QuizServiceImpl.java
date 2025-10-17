@@ -58,11 +58,22 @@ public class QuizServiceImpl implements QuizService, DomainConverter<Quiz, QuizV
 			e.printStackTrace();
 		}
 		view.setStartDateTime(LocalDateTime.now());
-		view.setEndDateTime(view.getStartDateTime().plusMinutes(view.getDurationInMinutes()));
 		view.setUpdatedAt(LocalDateTime.now());
 		return saveQuiz(view);
 	}
 	
+	@Override
+	public QuizView submitQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture) {
+		try {
+			SubmissionView submission = submissionFuture.get();
+			view.setEndDateTime(submission.getEndTime());
+		} catch (InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
+	
+		view.setUpdatedAt(LocalDateTime.now());
+		return saveQuiz(view);
+	}
 	@Override
 	public QuizView getQuizById(Long id ) {
 		if(id != null) {

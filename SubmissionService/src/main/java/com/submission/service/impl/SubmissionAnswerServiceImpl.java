@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.quiz.common.view.SubmissionAnswerView;
+import com.quiz.common.view.SubmissionView;
+import com.submission.model.Submission;
 import com.submission.model.SubmissionAnswer;
 import com.submission.repository.SubmissionAnswerRepo;
 import com.submission.service.SubmissionAnswerService;
+import com.submission.service.SubmissionService;
 
 @Service
 public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
@@ -19,60 +22,41 @@ public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{
 	@Autowired
 	private SubmissionAnswerRepo repository;
 	
+	@Autowired
+	private CommonSubmissionService commonService;
+	
+	
 	@Override
 	public Optional<SubmissionAnswerView> getById(Long sId){
 		if (sId == null) {
 			return Optional.empty();
 		}
-		return toView(repository.findById(sId).orElse(null));
+		return commonService.toSubmissionAnswerView(repository.findById(sId).orElse(null));
 	}
 	
 	@Override
 	public List<SubmissionAnswerView> getAll(){
-		return toViewList(repository.findAll());
+		return commonService.toAnswerViewList(repository.findAll());
+	}
+
+	private Optional<SubmissionAnswerView> saveAnswer(SubmissionAnswer answer) {
+		return commonService.toSubmissionAnswerView(repository.save(answer));
 	}
 	
 	@Override
-	public Optional<SubmissionAnswerView> saveOrUpdate(Long submissionId, SubmissionAnswerView view) {
-		if(view == null) {
-			throw new IllegalArgumentException("User cannot be null");
-		}
-//		view.setSubmission(submissionId);
-		SubmissionAnswer subAnswer = toEntity(view);
+	public Optional<SubmissionAnswerView> saveOrUpdateBySubmission(Long submissionId, SubmissionAnswerView view) throws Exception {
+		commonService.validateAnswerView(view, false);
+		commonService.validateSubmissionStatus(submissionId);
+		SubmissionAnswer subAnswer = repository.findByQuestionIdAndSubmissionId(view.getQuestion().getId(), submissionId).orElse(commonService.toSubmissionAnswer(view));
 		subAnswer.setSubmissionId(submissionId);
-		return toView(repository.save(subAnswer));
+		subAnswer.setGivenAnswer(view.getGivenAnswer());
+		return saveAnswer(subAnswer);
+		
 	}
-	
-	private List<SubmissionAnswerView> toViewList(List<SubmissionAnswer> users) {
-		return Objects.requireNonNullElse(users, new ArrayList<SubmissionAnswer>())
-				.stream().map(this::toView).map(Optional::get).toList();
-	}
-	
-    private Optional<SubmissionAnswerView> toView(SubmissionAnswer entity) {
-        return Optional.ofNullable(entity)
-                .map(answer -> SubmissionAnswerView.builder()
-                        .id(answer.getId())
-//                        .submissionId(answer.getSubmissionId())
-//                        .question(answer.getQuestionId())
-                        .givenAnswer(answer.getGivenAnswer())
-                        .correct(answer.getCorrect())
-                        .pointsAwarded(answer.getPointsAwarded())
-                        .build()
-                );
-    }
     
-    private SubmissionAnswer toEntity(SubmissionAnswerView view) {
-        if (view == null) {
-            return null;
-        }
-        return SubmissionAnswer.builder()
-                .id(view.getId())
-                .submissionId(view.getSubmission().getId())
-                .questionId(view.getQuestion().getId())
-                .givenAnswer(view.getGivenAnswer())
-                .correct(view.getCorrect())
-                .pointsAwarded(view.getPointsAwarded())
-                .build();
-    }
+	@Override
+	public List<SubmissionAnswerView> getAllBySubmission(Long submissionId){
+		return commonService.toAnswerViewList(repository.findBySubmissionId(submissionId));
+	}
 
 }

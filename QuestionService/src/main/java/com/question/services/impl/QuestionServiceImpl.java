@@ -15,6 +15,9 @@ import com.question.repositories.QuestionRepository;
 import com.question.services.QuestionService;
 import com.quiz.common.view.QuestionEvent;
 import com.quiz.common.view.QuestionView;
+import com.quiz.common.view.QuizView;
+import com.quiz.common.view.SubmissionAnswerView;
+import com.quiz.common.view.SubmissionView;
 
 @Service
 public class QuestionServiceImpl implements QuestionService {
@@ -90,7 +93,7 @@ public class QuestionServiceImpl implements QuestionService {
 		qView.setId(question.getId());
 		qView.setCategory(question.getCategory());
 		qView.setCreatedAt(question.getCreatedAt());
-//		qView.setQuiz(question.getQuizId());
+		qView.setQuiz(QuizView.builder().id(question.getQuizId()).build());
 		qView.setDifficulty(question.getDifficulty());
 		qView.setOptions(question.getOptions());
 		qView.setText(question.getText());
@@ -112,12 +115,33 @@ public class QuestionServiceImpl implements QuestionService {
 		ques.setIsActive(view.getIsActive());
 		ques.setOptions(view.getOptions());
 		ques.setPoints(view.getPoints());
-		ques.setQuizId(view.getQuiz().getId());
 		ques.setText(view.getText());
 		ques.setTimeLimitInSeconds(view.getTimeLimitInSeconds());
 		ques.setType(view.getType());
 		ques.setUpdatedAt(view.getUpdatedAt());
 		return ques;
+	}
+
+	@Override
+	public SubmissionView verifySubmission(SubmissionView submission) throws Exception {
+		if(submission==null) {
+			throw new Exception("submission provided to verify is null");
+		}
+		for(SubmissionAnswerView view: submission.getAnswers()) {
+			Question question = repository.findById(view.getQuestion().getId()).orElseThrow(()-> new Exception("No question associated with this answer"));
+			if(question.getCorrectAnswer()==null ||question.getCorrectAnswer().isBlank()) {
+				if(view.getGivenAnswer().equals(question.getCorrectAnswer())) {
+					view.setCorrect(true);
+					view.setPointsAwarded(question.getPoints());
+				} else {
+					view.setCorrect(false);
+					view.setPointsAwarded(0);
+				}
+			} else {
+				throw new Exception("Invalid question");
+			}
+		}
+		return submission;
 	}
 
 }

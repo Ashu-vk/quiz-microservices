@@ -15,6 +15,10 @@ public interface SubmissionAnswerService {
 //	Optional<SubmissionAnswerView> saveOrUpdate(SubmissionAnswerView view);
 
 
-	Optional<SubmissionAnswerView> saveOrUpdate(Long submisssionId, SubmissionAnswerView view);
+	Optional<SubmissionAnswerView> saveOrUpdateBySubmission(Long submisssionId, SubmissionAnswerView view) throws Exception;
+
+	List<SubmissionAnswerView> getAllBySubmission(Long submissionId);
+
+//	List<SubmissionAnswerView> saveAll(List<SubmissionAnswerView> viewList) throws Exception;
 
 }

@@ -23,6 +23,6 @@ public class SubmissionAnswer {
     private Long questionId;    // from Question Service
     private String givenAnswer; // student’s answer
     private Boolean correct;    // evaluated later
-    private Integer pointsAwarded;
+    private Integer points;
 }
 

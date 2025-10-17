@@ -44,8 +44,13 @@ public class RestSubmissionController {
 	}
 	
 	@RequestMapping(value = "/submission/start/quiz", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-	public SubmissionView getStartSubmissions(@RequestBody QuizView quiz, @RequestParam(value = "userId") Long userId) {
+	public SubmissionView startSubmissions(@RequestBody QuizView quiz, @RequestParam(value = "userId") Long userId) {
 		return service.startQuiz(quiz, userId);
+	}
+	
+	@RequestMapping(value = "/submission/submit/quiz", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+	public SubmissionView stopSubmissions(@RequestBody QuizView quiz, @RequestParam(value = "userId") Long userId) throws Exception {
+		return service.submitQuiz(quiz, userId);
 	}
 	
 	@RequestMapping(value = "/submission/user/{userId}", method = RequestMethod.GET)

@@ -34,7 +34,6 @@ public class RestQuizController {
 	@PostMapping("/quiz/{id}/start")
 	public QuizView startQuiz(@PathVariable(value ="id") Long id,
 		@RequestParam(value = "userId") Long userId) {
-		System.err.println("userId"+ userId);
 		QuizView view = quizService.getQuizById(id);
 		List<QuestionView> qList= webClient.get().uri("http://question-service/questions/quiz/{id}", id)
         .retrieve()
@@ -46,6 +45,24 @@ public class RestQuizController {
 				.bodyValue(view)
 		.retrieve().bodyToMono(SubmissionView.class).toFuture();
 		QuizView quiz =quizService.startQuiz(view, submissionFuture);
+		return quiz;
+	}
+	
+	@PostMapping("/quiz/{id}/submit")
+	public QuizView submitQuiz(@PathVariable(value ="id") Long id,
+		@RequestParam(value = "userId") Long userId) {
+		QuizView view = quizService.getQuizById(id);
+//		List<QuestionView> qList= webClient.get().uri("http://question-service/questions/quiz/{id}", id)
+//        .retrieve()
+//        .bodyToFlux(QuestionView.class)
+//        .collectList() 
+//        .block();
+//		view.setQuestions(qList);
+		CompletableFuture<SubmissionView> submissionFuture = webClient.post().uri("http://submission-service/submission/submit/quiz?userId={userId}", userId)
+				.bodyValue(view)
+		.retrieve().bodyToMono(SubmissionView.class).toFuture();
+		QuizView quiz =quizService.startQuiz(view, submissionFuture);
+//		webClient.get().uri("http://submission-service/submission/submit/quiz?userId={userId}", userId);
 		return quiz;
 	}
 	
