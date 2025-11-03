@@ -129,7 +129,7 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 		for(SubmissionAnswerView view: submission.getAnswers()) {
 			Question question = repository.findById(view.getQuestion().getId()).orElseThrow(()-> new Exception("No question associated with this answer"));
-			if(question.getCorrectAnswer()==null ||question.getCorrectAnswer().isBlank()) {
+			if(question.getCorrectAnswer()!=null && !question.getCorrectAnswer().isBlank()) {
 				if(view.getGivenAnswer().equals(question.getCorrectAnswer())) {
 					view.setCorrect(true);
 					view.setPointsAwarded(question.getPoints());
@@ -138,7 +138,7 @@ public class QuestionServiceImpl implements QuestionService {
 					view.setPointsAwarded(0);
 				}
 			} else {
-				throw new Exception("Invalid question");
+				throw new Exception("Invalid question" + question.getId());
 			}
 		}
 		return submission;

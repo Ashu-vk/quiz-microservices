@@ -121,6 +121,9 @@ public class SubmissionServiceImpl implements SubmissionService {
 	public SubmissionView submitQuiz(QuizView quiz, Long userId) throws Exception {
 		Submission submission = repository.findByQuizIdAndUserId(quiz.getId(), userId)
 				.orElseThrow(() -> new Exception("User does not have submitted for quiz"+ quiz.getId()));
+		if(!submission.getStatus().equals("STARTED")) {
+			throw new IllegalStateException(String.format("Submission %s status must be in STARTED", submission.getId()));
+		}
 		submission.setEndTime(LocalDateTime.now());
 		submission.setStatus("SUBMITTED");
 		SubmissionView subView = toView(submission).get();
