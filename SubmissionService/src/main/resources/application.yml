@@ -1,0 +1,83 @@
+server:
+  port: 8083
+  error:
+    include-message: always
+    
+spring:
+  application:
+    name: submission-service
+  datasource:
+    drivaer-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/eazybank
+    username: postgres
+    password: postgres
+    
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      
+  cloud:
+    config:
+      import-check:
+        enabled: false
+     
+     
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+    
+management:
+  tracing:
+    enabled: false
+  sampling:
+    probability: 0.0
+    
+resilience4j:
+  circuitbreaker:
+    instances:
+      quiz-service:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2s
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      user-service:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2s
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+      question-service:
+        registerHealthIndicator: true
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2s
+        minimumNumberOfCalls: 5
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+    
+jwt:
+  secret: thisIsMySuperLongSecretKeyThatIsExactlySixtyFourBytesLong!!123456789122

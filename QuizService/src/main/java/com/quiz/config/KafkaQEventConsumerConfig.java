@@ -1,6 +1,7 @@
 package com.quiz.config;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -31,8 +32,10 @@ public class KafkaQEventConsumerConfig {
            props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
            props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class); // ✅ correct one
            props.put(JsonDeserializer.TRUSTED_PACKAGES, "*"); // trust all packages, or restrict to your package
+           
            return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(), 
                    new JsonDeserializer<>(QuestionEvent.class, false));
+           
     }
 
     @Bean

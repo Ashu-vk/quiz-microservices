@@ -14,7 +14,7 @@ public interface QuizService {
 
 	List<QuizView> getQuiz();
 
-	QuizView startQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture);
+	QuizView startQuiz(QuizView view, SubmissionView submissionFuture);
 
 	QuizView submitQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture);
 

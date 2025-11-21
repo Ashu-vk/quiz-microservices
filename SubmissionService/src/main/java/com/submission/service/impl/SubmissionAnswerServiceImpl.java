@@ -1,20 +1,15 @@
 package com.submission.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.quiz.common.view.SubmissionAnswerView;
-import com.quiz.common.view.SubmissionView;
-import com.submission.model.Submission;
 import com.submission.model.SubmissionAnswer;
 import com.submission.repository.SubmissionAnswerRepo;
 import com.submission.service.SubmissionAnswerService;
-import com.submission.service.SubmissionService;
 
 @Service
 public class SubmissionAnswerServiceImpl implements SubmissionAnswerService{

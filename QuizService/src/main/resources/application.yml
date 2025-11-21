@@ -31,6 +31,17 @@ eureka:
  instance:
   prefer-ip-address: false
   hostname: localhost
+  
+# Zipkin settings
+#FOr prod we can reduce rate
+#management:
+ #tracing:
+  #sampling:
+   #probability: 1.0
+   
+jwt:
+  secret: thisIsMySuperLongSecretKeyThatIsExactlySixtyFourBytesLong!!123456789122
+
  
 #  config:
 #    import: optional:configserver:http://localhost:9090

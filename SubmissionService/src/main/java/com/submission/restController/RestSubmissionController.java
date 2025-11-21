@@ -14,8 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.quiz.common.view.QuizView;
 import com.quiz.common.view.SubmissionView;
-import com.quiz.common.view.UserView;
-import com.submission.fign.services.UserFeignClient;
 import com.submission.service.SubmissionService;
 
 @RestController

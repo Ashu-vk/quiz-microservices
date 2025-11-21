@@ -15,13 +15,11 @@ import com.quiz.common.view.QuizView;
 import com.quiz.common.view.SubmissionAnswerView;
 import com.quiz.common.view.SubmissionView;
 import com.quiz.common.view.UserView;
-import com.submission.fign.services.QuestionFiegnService;
-import com.submission.fign.services.QuizFeignService;
-import com.submission.fign.services.UserFeignClient;
 import com.submission.model.Submission;
 import com.submission.repository.SubmissionRepo;
-import com.submission.service.SubmissionAnswerService;
 import com.submission.service.SubmissionService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class SubmissionServiceImpl implements SubmissionService {
@@ -33,13 +31,13 @@ public class SubmissionServiceImpl implements SubmissionService {
 	private CommonSubmissionService commonService;
 	
 	@Autowired
-	private UserFeignClient userService;
+	private UserFeignClientImpl userService;
 	
 	@Autowired
-	private QuizFeignService quizFiegnService;
+	private QuizFeignServiceImpl quizService;
 	
 	@Autowired
-	private QuestionFiegnService questionFiegnService;
+	private QuestionFiegnServiceImpl questionFiegnService;
 	
 	@Override
 	public List<SubmissionView> getSubmissions() {
@@ -54,11 +52,13 @@ public class SubmissionServiceImpl implements SubmissionService {
 		return toViewList(repository.findByUserId(userId));	
 	}
 	@Override
-	public SubmissionView getSubmissionById(Long id) throws Exception {
-		Submission sub = repository.findById(id).get();
-		SubmissionView view =toView(sub).orElseThrow(()-> new Exception("No submission found for id"+ id));
-		view.setUser(userService.getUserById(sub.getUserId()));
-		view.setQuiz(quizFiegnService.getQuizById(sub.getQuizId()));;
+	public SubmissionView getSubmissionById(Long id)  {
+		Submission sub = repository.findById(id).orElseThrow(()-> new EntityNotFoundException("No submission found for id"+ id));
+		SubmissionView view =toView(sub).get();
+		if(view!=null) {
+			view.setUser(userService.getUserById(sub.getUserId()));
+			view.setQuiz(quizService.getQuizById(sub.getQuizId()));;
+		}
 		return view;
 	}
 	@Override
@@ -108,11 +108,13 @@ public class SubmissionServiceImpl implements SubmissionService {
     }
 	@Override
 	public SubmissionView startQuiz(QuizView quiz, Long userId) {
+		System.err.println("userid from submission" + userId);
 		SubmissionView view =SubmissionView.builder()
 		.quiz(quiz)
 		.startTime(LocalDateTime.now())
 		.status("STARTED")
 		.totalPoints(quiz.getQuestions().stream().map(QuestionView::getPoints).reduce(0, Integer::sum))
+		
 		.user(userService.getUserById(userId))
 		.build();
 		return saveOrUpdateSubmission(view).get();

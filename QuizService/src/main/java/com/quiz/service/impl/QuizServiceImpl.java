@@ -6,9 +6,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
-import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
 import com.quiz.common.view.QuizView;
@@ -18,7 +16,8 @@ import com.quiz.repositories.QuizRepository;
 import com.quiz.service.QuizService;
 import com.quiz.utils.DomainConverter;
 
-import jakarta.transaction.Transactional;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class QuizServiceImpl implements QuizService, DomainConverter<Quiz, QuizView> {
@@ -51,33 +50,32 @@ public class QuizServiceImpl implements QuizService, DomainConverter<Quiz, QuizV
 	}
 	
 	@Override
-	public QuizView startQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture) {
-		try {
-			SubmissionView submission = submissionFuture.get();
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-		}
+	public QuizView startQuiz(QuizView view, SubmissionView submission) {
 		view.setStartDateTime(LocalDateTime.now());
 		view.setUpdatedAt(LocalDateTime.now());
 		return saveQuiz(view);
 	}
 	
-	@Override
-	public QuizView submitQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture) {
-		try {
-			SubmissionView submission = submissionFuture.get();
-			view.setEndDateTime(submission.getEndTime());
-		} catch (InterruptedException | ExecutionException e) {
-			e.printStackTrace();
-		}
+
 	
+	@Override
+	@CircuitBreaker(name = "stop-quiz", fallbackMethod = "onStopQuizFailure")
+	public QuizView submitQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture) {
+
+	    SubmissionView submission = submissionFuture.exceptionally(ex -> {
+	        throw new RuntimeException(ex); // ⬅ FUTURE FAILURES PROPAGATE TO CIRCUIT BREAKER
+	    }).join(); // ⬅ non-blocking join
 		view.setUpdatedAt(LocalDateTime.now());
 		return saveQuiz(view);
+	}
+	public QuizView onStopQuizFailure(QuizView view, CompletableFuture<SubmissionView> submissionFuture, Throwable t) {
+		 System.err.println("Fallback-1: " + t.getMessage());
+		    return new QuizView(); // or custom fallback object
 	}
 	@Override
 	public QuizView getQuizById(Long id ) {
 		if(id != null) {
-			return toView(repository.findById(id).orElseThrow( () ->new ResourceNotFoundException("Quiz not found by id" + id)));
+			return toView(repository.findById(id).orElseThrow( () ->new EntityNotFoundException("Quiz not found by id: " + id)));
 		}
 		return null;
 	}

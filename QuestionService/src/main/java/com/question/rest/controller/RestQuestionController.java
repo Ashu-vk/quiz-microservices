@@ -27,7 +27,7 @@ public class RestQuestionController {
 		return questionService.getAll();
 
 	}
-
+  
 	@RequestMapping(value = "/questions/quiz/{quizId}", method = RequestMethod.GET)
 	public List<QuestionView> getQuestionsByQuizId(@PathVariable("quizId") Long quizId) {
 		return questionService.getAllByQuizId(quizId);

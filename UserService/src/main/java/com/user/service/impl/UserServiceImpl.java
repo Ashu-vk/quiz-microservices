@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 		if (userId == null) {
 			return Optional.empty();
 		}
-		return toView(repository.findById(userId).orElse(null));
+		return toView(repository.findById(userId).orElseThrow(()->new RuntimeException("User not found with id: " +userId)));
 	}
 	
 	@Override
@@ -66,8 +66,7 @@ public class UserServiceImpl implements UserService {
 	                .build();
 	    }
 	private Optional<UserView> toView(User user) {
-	    
-		return Optional.ofNullable(user).map(u->
+		return Optional.of(user).map(u->
 			 UserView.builder()
 		     .id(u.getId())
 		     .name(u.getUsername())

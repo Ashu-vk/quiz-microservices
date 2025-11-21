@@ -27,7 +27,6 @@ ext {
 
 dependencies {
   	api 'org.springframework.cloud:spring-cloud-starter-config'
-  	api 'org.springframework.boot:spring-boot-starter-webflux'
     api 'org.springframework.boot:spring-boot-starter'
     compileOnly 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok'
