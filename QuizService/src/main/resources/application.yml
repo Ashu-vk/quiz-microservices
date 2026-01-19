@@ -34,13 +34,25 @@ eureka:
   
 # Zipkin settings
 #FOr prod we can reduce rate
-#management:
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
  #tracing:
   #sampling:
    #probability: 1.0
    
 jwt:
   secret: thisIsMySuperLongSecretKeyThatIsExactlySixtyFourBytesLong!!123456789122
+  
+#resilience4j:
+#  bulkhead:
+#    instances:
+#      start-quiz-bulkhead:
+#        maxConcurrentCalls: 2
+#        maxWaitDuration: 0ms
+
 
  
 #  config:

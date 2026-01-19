@@ -20,6 +20,7 @@ import com.quiz.common.view.QuizView;
 import com.quiz.common.view.SubmissionView;
 import com.quiz.service.QuizService;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -42,9 +43,11 @@ public class RestQuizController {
 	
 	@PostMapping("/quiz/{id}/start")
 	@CircuitBreaker(name = "start-quiz", fallbackMethod = "onStartQuizFailure")
+	@Bulkhead(name= "start-quiz-bulkhead", fallbackMethod = "onStartQuizFailure")
 	public Mono<QuizView> startQuiz(@PathVariable(value ="id") Long id,
-		@RequestParam(value = "userId") Long userId) {
+		@RequestParam(value = "userId") Long userId) throws InterruptedException {
 		    
+		Thread.sleep(5000);
 		    // Step 1: fetch quiz from JPA (blocking)
 		    Mono<QuizView> quizMono = Mono.fromCallable(() -> quizService.getQuizById(id))
 		            .subscribeOn(Schedulers.boundedElastic());
@@ -85,6 +88,10 @@ public class RestQuizController {
 	public  Mono<QuizView> onStartQuizFailure(Long id, Long userId, Throwable t) {
 	    logger.info("Fallback-1: {}", t.getMessage());
 	    return Mono.just(new QuizView());
+	}
+	public  Mono<QuizView> onBulkheadQuiz(Long id, Long userId, Throwable t) {
+		logger.info("Bulkhead-1: {}", t.getMessage());
+		return Mono.just(new QuizView());
 	}
 	
 	

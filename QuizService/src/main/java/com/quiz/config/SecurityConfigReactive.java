@@ -28,7 +28,8 @@ public class SecurityConfigReactive {
 	    SecurityWebFilterChain apiHttpSecurity(ServerHttpSecurity http) {
 	        http
          .csrf(csrf -> csrf.disable())
-         .authorizeExchange(exchanges -> exchanges
+         .authorizeExchange(exchange -> exchange
+        		 .pathMatchers("/actuator/**").permitAll()
              .anyExchange().authenticated()
          )
          .oauth2ResourceServer(oauth2 -> oauth2

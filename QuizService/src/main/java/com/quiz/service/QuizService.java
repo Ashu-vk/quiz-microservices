@@ -18,4 +18,6 @@ public interface QuizService {
 
 	QuizView submitQuiz(QuizView view, CompletableFuture<SubmissionView> submissionFuture);
 
+//	QuizView startQuiz(Long quizId);
+
 }
