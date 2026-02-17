@@ -1,0 +1,13 @@
+/* Simple styling for quiz list */
+.quiz-list{ padding:12px }
+.loading{ color:#374151; padding:12px; }
+.empty{ color:#64748b; padding:12px }
+.quiz-table{ width:100%; border-collapse:collapse; margin-top:8px }
+.quiz-table th, .quiz-table td{ text-align:left; padding:10px 12px; border-bottom:1px solid #eef2f6 }
+.quiz-table th{ color:#0f172a; font-weight:700; background:transparent }
+.quiz-table tr:hover{ background:rgba(2,6,23,0.02) }
+.quiz-table .num{ text-align:center; width:120px }
+.pager{ display:flex; align-items:center; gap:12px; margin-top:12px }
+.pager button{ padding:6px 10px; border-radius:6px; border:1px solid #e6eef6; background:#fff; cursor:pointer }
+.pager button:disabled{ opacity:.5; cursor:not-allowed }
+

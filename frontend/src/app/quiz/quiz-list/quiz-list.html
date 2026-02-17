@@ -1,0 +1,30 @@
+<div class="quiz-list">
+	<div *ngIf="loading" class="loading">Loading quizzes…</div>
+
+	<table *ngIf="!loading && quizzes?.length" class="quiz-table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Type</th>
+				<th>Category</th>
+				<th>Questions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let q of quizzes">
+				<td>{{ q.name }}</td>
+				<td>{{ q.type || '-' }}</td>
+				<td>{{ q.category || '-' }}</td>
+				<td class="num">{{ q.questionCount ?? 0 }}</td>
+			</tr>
+		</tbody>
+	</table>
+
+	<div *ngIf="!loading && (!quizzes || quizzes.length === 0)" class="empty">No quizzes found.</div>
+
+	<div class="pager">
+		<button (click)="load(page - 1)" [disabled]="page <= 0">Prev</button>
+		<span>Page {{ page + 1 }} of {{ totalPages }}</span>
+		<button (click)="load(page + 1)" [disabled]="page + 1 >= totalPages">Next</button>
+	</div>
+</div>

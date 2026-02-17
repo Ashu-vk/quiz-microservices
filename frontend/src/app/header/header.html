@@ -1,0 +1,34 @@
+<div class="app-header">
+	<div class="left-group">
+		<div class="logo">
+			<div class="brand">Quiz</div>
+			<div class="tagline">Learning</div>
+		</div>
+	</div>
+
+	<nav class="menu" role="navigation" aria-label="Main navigation">
+		<a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+		<a routerLink="/quiz" routerLinkActive="active">Quiz</a>
+		<a routerLink="/questions" routerLinkActive="active">Questions</a>
+		<a routerLink="/results" routerLinkActive="active">Results</a>
+		<a routerLink="/about" routerLinkActive="active">About</a>
+	</nav>
+
+	<div class="right-group">
+		<div class="profile" (click)="toggleProfile()" title="{{user.name}}">
+			<img [src]="user.avatarUrl" alt="profile" />
+		</div>
+
+		<div class="profile-panel" *ngIf="showProfile">
+			<div class="line"><strong>{{user.name}}</strong></div>
+			<div class="line"><strong>Status:</strong> {{user.status}}</div>
+			<ng-container *ngIf="!user.isAdmin">
+				<div class="line"><strong>Total quizzes:</strong> {{user.totalQuizzes}}</div>
+				<div class="line"><strong>Passed quizzes:</strong> {{user.passedQuizzes}}</div>
+			</ng-container>
+			<ng-container *ngIf="user.isAdmin">
+				<div class="line"><strong>Quizzes created:</strong> {{user.createdQuizzes}}</div>
+			</ng-container>
+		</div>
+	</div>
+</div>
