@@ -1,0 +1,62 @@
+<div class="home-container">
+    <div class="home-container">
+        <div class="home-hero">
+            <div class="hero-content">
+                <h1>Welcome to QuizMaster</h1>
+                <p class="subtitle">Challenge yourself with quick quizzes — learn, compete, and have fun.</p>
+                <div class="hero-actions">
+                    <button class="btn primary" (click)="startQuiz(featured.id)">Start Featured Quiz</button>
+                    <button class="btn" (click)="browseCategories()">Browse Categories</button>
+                    <button class="btn ghost" (click)="openPractice()">Practice</button>
+                </div>
+            </div>
+            <div class="hero-card">
+                <h3>Featured</h3>
+                <h2>{{ featured.title }}</h2>
+                <p>{{ featured.description }}</p>
+                <div class="meta">
+                    <span>{{ featured.questions }} questions</span>
+                    <span>•</span>
+                    <span>{{ featured.time }}</span>
+                </div>
+            </div>
+        </div>
+
+        <section class="features">
+            <div class="feature">
+                <h4>Timed Quizzes</h4>
+                <p>Short quizzes with timers to keep you sharp.</p>
+            </div>
+            <div class="feature">
+                <h4>Categories</h4>
+                <p>Multiple categories from general knowledge to niche topics.</p>
+            </div>
+            <div class="feature">
+                <h4>Track Progress</h4>
+                <p>Save results and track improvement over time.</p>
+            </div>
+        </section>
+
+        <section class="quiz-list">
+            <h3>Popular Quizzes</h3>
+            <div class="cards">
+                <div class="card" *ngFor="let q of quizzes; trackBy: trackById">
+                    <h4>{{ q.title }}</h4>
+                    <p class="desc">{{ q.description }}</p>
+                    <div class="card-meta">
+                        <span>{{ q.questions }} Qs</span>
+                        <span>{{ q.time }}</span>
+                    </div>
+                    <div class="card-actions">
+                        <button class="btn small" (click)="startQuiz(q.id)">Start</button>
+                        <button class="btn small ghost" (click)="browseCategories()">Details</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="home-footer">
+            <div>Made with ❤ — Ready to test your knowledge?</div>
+        </footer>
+    </div>
+</div>
